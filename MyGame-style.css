@@ -1,6 +1,6 @@
 body {
   background-color: #eef8db;
-  font-family:'Times New Roman', Times, serif;
+  font-family: "Times New Roman", Times, serif;
   margin: 0;
   color: rgb(135, 38, 38);
 }
@@ -94,19 +94,25 @@ h1 {
   display: flex;
   align-items: center;
   padding: 10px;
-  border-bottom: 5px solid #261b18;
+  border-bottom: 5px solid #000000;
 }
 
 .buttons {
   background-color: rgba(160, 208, 239, 0.912);
   margin-left: 200px;
-  font-size: xx-large;
+  font-size: 2rem;
   border-radius: 10%;
 }
 
-.p1-tiles,.p2-tiles {
+.p1-tiles,
+.p2-tiles {
   margin-left: 50px;
-  background-color:#97b640;
   width: 70px;
   height: 75px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  border: 5px solid #b42828;
+  border-radius: 10%;
 }

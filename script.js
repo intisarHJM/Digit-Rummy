@@ -33,7 +33,7 @@ const randomize = () => {
     // return `${randomCard.textContent} orange tile`
     return {
       number: randomCard.textContent,
-      color: "orange"
+      color: "orange",
     }
   }
 
@@ -42,9 +42,9 @@ const randomize = () => {
     const randomId = Math.floor(Math.random() * red.length)
     const randomCard = red[randomId]
 
-    return  {
+    return {
       number: randomCard.textContent,
-      color: "red"
+      color: "red",
     }
   }
 
@@ -54,7 +54,7 @@ const randomize = () => {
 
     return {
       number: randomCard.textContent,
-      color: "green"
+      color: "green",
     }
   }
 
@@ -62,9 +62,9 @@ const randomize = () => {
     const randomId = Math.floor(Math.random() * blue.length)
     const randomCard = blue[randomId]
 
-    return  {
+    return {
       number: randomCard.textContent,
-      color: "blue"
+      color: "blue",
     }
   }
 
@@ -72,9 +72,9 @@ const randomize = () => {
     const randomId = Math.floor(Math.random() * smileyJocker.length)
     const randomCard = smileyJocker[randomId]
 
-    return  {
+    return {
       number: randomCard.textContent,
-      color: "Joker"
+      color: "Joker",
     }
   }
   const rand = []
@@ -96,13 +96,17 @@ const randomize = () => {
 //randomize()
 
 const newArray = randomize()
+const newArray2 = randomize()
 console.log(newArray)
 
-let player1Array = []
-player1.forEach(((tile, index) => {
-  tile.textContent = newArray[index].number
-  tile.classList.add(newArray[index].color)
-}))
 
-newArray.forEach(element => player1Array[element])
-console.log(player1Array)
+//newArray will return the randomized cards in objects array
+player1.forEach((tile1, index1) => {
+  tile1.classList.add(newArray[index1].color) //newArray[index1].color
+  tile1.textContent = newArray[index1].number +` `+ newArray[index1].color
+})
+
+player2.forEach((tile2, index2) => {
+  tile2.classList.add(newArray2[index2].color) //newArray[index1].color
+  tile2.textContent = newArray2[index2].number +` `+ newArray2[index2].color
+})
