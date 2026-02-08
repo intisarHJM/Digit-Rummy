@@ -1,28 +1,98 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="./MyGame-style.css">
-  <script src="./script.js"></script>
-  <title>The Digit Rummy</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./MyGame-style.css" />
+    <title>The Digit Rummy</title>
+  </head>
+  <body>
+    <main class="game">
+      <h1>Digit Rummy</h1>
 
+      <section class="playground">
+        <!--aside is for creating side-bar element -->
+        <aside class="tile-stockpile">
+          <h2>Stockpile</h2>
+          <div class="tile-group">
+            <div class="tile orange-tile" id="orange-1">1</div>
+            <div class="tile orange-tile" id="orange-2">2</div>
+            <div class="tile orange-tile" id="orange-3">3</div>
+            <div class="tile orange-tile" id="orange-4">4</div>
+            <div class="tile orange-tile" id="orange-5">5</div>
+            <div class="tile orange-tile" id="orange-6">6</div>
+            <div class="tile orange-tile" id="orange-7">7</div>
+            <div class="tile orange-tile" id="orange-8">8</div>
+            <div class="tile orange-tile" id="orange-9">9</div>
+            <div class="tile orange-tile" id="orange-10">10</div>
+            <div class="tile orange-tile" id="orange-11">11</div>
+            <div class="tile orange-tile" id="orange-12">12</div>
+            <div class="tile orange-tile" id="orange-13">13</div>
 
-</head>
+            <div class="tile red-tile" id="red-1">1</div>
+            <div class="tile red-tile" id="red-2">2</div>
+            <div class="tile red-tile" id="red-3">3</div>
+            <div class="tile red-tile" id="red-4">4</div>
+            <div class="tile red-tile" id="red-5">5</div>
+            <div class="tile red-tile" id="red-6">6</div>
+            <div class="tile red-tile" id="red-7">7</div>
+            <div class="tile red-tile" id="red-8">8</div>
+            <div class="tile red-tile" id="red-9">9</div>
+            <div class="tile red-tile" id="red-10">10</div>
+            <div class="tile red-tile" id="red-11">11</div>
+            <div class="tile red-tile" id="red-12">12</div>
+            <div class="tile red-tile" id="red-13">13</div>
 
+            <div class="tile blue-tile" id="blue-1">1</div>
+            <div class="tile blue-tile" id="blue-2">2</div>
+            <div class="tile blue-tile" id="blue-3">3</div>
+            <div class="tile blue-tile" id="blue-4">4</div>
+            <div class="tile blue-tile" id="blue-5">5</div>
+            <div class="tile blue-tile" id="blue-6">6</div>
+            <div class="tile blue-tile" id="blue-7">7</div>
+            <div class="tile blue-tile" id="blue-8">8</div>
+            <div class="tile blue-tile" id="blue-9">9</div>
+            <div class="tile blue-tile" id="blue-10">10</div>
+            <div class="tile blue-tile" id="blue-11">11</div>
+            <div class="tile blue-tile" id="blue-12">12</div>
+            <div class="tile blue-tile" id="blue-13">13</div>
 
+            <div class="tile green-tile" id="green-1">1</div>
+            <div class="tile green-tile" id="green-2">2</div>
+            <div class="tile green-tile" id="green-3">3</div>
+            <div class="tile green-tile" id="green-4">4</div>
+            <div class="tile green-tile" id="green-5">5</div>
+            <div class="tile green-tile" id="green-6">6</div>
+            <div class="tile green-tile" id="green-7">7</div>
+            <div class="tile green-tile" id="green-8">8</div>
+            <div class="tile green-tile" id="green-9">9</div>
+            <div class="tile green-tile" id="green-10">10</div>
+            <div class="tile green-tile" id="green-11">11</div>
+            <div class="tile green-tile" id="green-12">12</div>
+            <div class="tile green-tile" id="green-13">13</div>
 
+            <div class="tile smiley-tile" id="joker-1">☺</div>
+            <div class="tile smiley-tile" id="joker-2">☺</div>
+          </div>
+        </aside>
 
-<body>
+        <section class="action-zone">
+          <div class="player-rack" id="player-1-rack">
+            <h1>Player 1 Hand</h1>
+            <button class="buttons" id="show-p1">SHOW</button>
+          </div>
 
+          <div class="main-board" id="game-table">
+            <h1>Main Board (Play sets here)</h1>
+            <button class="buttons" id="start">start</button>
+          </div>
 
-
-<h1>Digital Game Playground</h1>
-
-
-
-
-
-
-</body>
+          <div class="player-rack" id="player-2-rack">
+            <h1>Player 2 Hand</h1>
+            <button class="buttons" id="show-p2">SHOW</button>
+          </div>
+        </section>
+      </section>
+    </main>
+  </body>
 </html>
