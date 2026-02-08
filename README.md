@@ -12,7 +12,7 @@
 is a digital adaptation of a strategic pattern-matching board game for
 **2 players**, recreating the physical "Digit" tile game experience in the browser. Players compete to empty their hands by forming valid **melds** (sequences/sets) on a shared **Playground**, with a unique **60-second turn timer** and
 
-**🔑 Main Requirement: Initial Meld to Enter Playground3+ consecutive numbers, SAME COLOR (e.g., Red 11-12-13)**
+**🔑 Main Requirement: Initial Meld to Enter Playground 3+ consecutive numbers, SAME COLOR (e.g., Red 11-12-13)**
 
 **Full rules in [Game Protocol](#game-protocol) section below**
 ***
@@ -50,6 +50,7 @@ is a digital adaptation of a strategic pattern-matching board game for
 #### ***Future updates***
 - [ ] More Players can be added.
 - [ ] A button to randomize the tiles manually.
+- [ ] More tiles can be added like 1-13* 2copy * 4colors
 
 
 ***
@@ -60,10 +61,10 @@ is a digital adaptation of a strategic pattern-matching board game for
 
 ### 1. COMPONENTS
 
-* 108 numbered tiles (1-13 × 2 copies of each number × 4 colours: Red, Blue, Green, Orange)
+* 54 numbered tiles (1-13 of each number × 4 colors: Red, Blue, Green, Orange + smiley face tiles(☺))
 
 * Playground mat (shared area Players can take action on switch the cards to make new patterns and add their remaining cards if they match)
-* 4 player racks (hold 12 tiles each)
+* 2 player racks (hold 12 tiles each)
 * 	60-second timer
 * 	Score sheets
 
@@ -73,10 +74,11 @@ is a digital adaptation of a strategic pattern-matching board game for
 
 ### 3. SETUP
 
-* Shuffle tiles face-down
-* Deal 12 tiles per player to racks
-* Remaining tiles = draw pile
-* Youngest player starts
+1. **Dealing Tiles:** tiles are randomly distributed to each player's rack.
+
+2. **The Stock Pile:** All remaining tiles that were not dealt are placed in the Stock Pile at the side bar.
+
+3. **Starting the Game:** The youngest player takes the first turn( Play then proceeds clockwise).
 
 ### 4. INITIAL MELD REQUIREMENT
 

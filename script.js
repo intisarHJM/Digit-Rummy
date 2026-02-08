@@ -3,11 +3,15 @@ const orange = document.querySelectorAll(".orange-tile")
 const green = document.querySelectorAll(".green-tile")
 const blue = document.querySelectorAll(".blue-tile")
 const red = document.querySelectorAll(".red-tile")
+const smileyJocker = document.querySelectorAll(".smiley-tile")
+const playerRacks = document.querySelectorAll(".player-rack")
+const player1 = document.querySelectorAll(".p1-tiles")
+const player2 = document.querySelectorAll(".p2-tiles")
 
-console.log(orange)
+/* console.log(orange)
 console.log(green)
 console.log(blue)
-console.log(red)
+console.log(red) */
 
 //.player-rack -> #player-1-rack | #player-2-rack
 //stockpile
@@ -26,7 +30,11 @@ const randomize = () => {
     const randomId = Math.floor(Math.random() * orange.length)
     const randomCard = orange[randomId]
 
-    console.log(`Current element: ${randomCard.textContent} orange tile`)
+    // return `${randomCard.textContent} orange tile`
+    return {
+      number: randomCard.textContent,
+      color: "orange"
+    }
   }
 
   //-----------//
@@ -34,32 +42,67 @@ const randomize = () => {
     const randomId = Math.floor(Math.random() * red.length)
     const randomCard = red[randomId]
 
-    console.log(`Current element: ${randomCard.textContent} red tile`)
+    return  {
+      number: randomCard.textContent,
+      color: "red"
+    }
   }
 
   const randomGreen = () => {
     const randomId = Math.floor(Math.random() * green.length)
     const randomCard = green[randomId]
 
-    console.log(`Current element: ${randomCard.textContent} green tile`)
+    return {
+      number: randomCard.textContent,
+      color: "green"
+    }
   }
 
   const randomBlue = () => {
     const randomId = Math.floor(Math.random() * blue.length)
     const randomCard = blue[randomId]
 
-    console.log(`Current element: ${randomCard.textContent} blue tile`)
+    return  {
+      number: randomCard.textContent,
+      color: "blue"
+    }
   }
 
-  for (let index = 0; index < 3; index++) {
-    randomOranges()
-    randomRed()
-    randomGreen()
-    randomBlue()
+  const smileys = () => {
+    const randomId = Math.floor(Math.random() * smileyJocker.length)
+    const randomCard = smileyJocker[randomId]
+
+    return  {
+      number: randomCard.textContent,
+      color: "Joker"
+    }
   }
+  const rand = []
+  const jokerChance = 0.2
+  for (let index = 0; index < 3; index++) {
+    rand.push(randomOranges())
+    rand.push(randomGreen())
+    rand.push(randomBlue())
+    rand.push(randomRed())
+
+    if (Math.random() < jokerChance) {
+      rand.pop()
+      rand.push(smileys())
+    }
+  }
+  return rand
 } //end of randomize function for each tile
 
-const firstPlayerRack = []
-const secondPlayerRack = []
+//randomize()
 
-randomize()
+const newArray = randomize()
+console.log(newArray)
+
+let player1Array = []
+player1.forEach(((tile, index) => {
+  tile.textContent = newArray[index].number
+  tile.classList.add(newArray[index].color)
+}))
+
+newArray.forEach(element => player1Array[element])
+console.log(player1Array)
