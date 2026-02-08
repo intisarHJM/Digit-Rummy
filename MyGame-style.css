@@ -71,7 +71,6 @@ h1 {
   color: gold;
 }
 
-
 .action-zone {
   display: flex;
   flex-direction: column;
@@ -98,11 +97,9 @@ h1 {
   border-bottom: 5px solid #261b18;
 }
 
-.buttons{
-
-background-color:rgba(160, 208, 239, 0.912);
-margin-left: 100px;
-font-size: xx-large;
-border-radius: 10%;
-
+.buttons {
+  background-color: rgba(160, 208, 239, 0.912);
+  margin-left: 200px;
+  font-size: xx-large;
+  border-radius: 10%;
 }
