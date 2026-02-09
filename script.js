@@ -7,6 +7,23 @@ const smileyJocker = document.querySelectorAll(".smiley-tile")
 const playerRacks = document.querySelectorAll(".player-rack")
 const player1 = document.querySelectorAll(".p1-tiles")
 const player2 = document.querySelectorAll(".p2-tiles")
+const tileGroup = document.querySelectorAll(".tile-group")
+const stockTile = document.querySelectorAll(".tile")
+const stButton = document.querySelector("#start")
+
+const tiles = Array.from(stockTile).map((tile) => {
+  const [color, number] = tile.id.split("-") // e.g.["orange", "1"]
+
+  return {
+    id: tile.id, // "orange-1"
+    color, // "orange"
+    number: Number(number) || null, // 1..13, or null for jokers
+    type: tile.classList.contains("smiley-tile") ? "joker" : "number",
+    element: tile, // reference to the DOM element
+  }
+})
+
+//console.log(tiles)
 
 /* console.log(orange)
 console.log(green)
@@ -97,16 +114,43 @@ const randomize = () => {
 
 const newArray = randomize()
 const newArray2 = randomize()
-console.log(newArray)
-
 
 //newArray will return the randomized cards in objects array
 player1.forEach((tile1, index1) => {
   tile1.classList.add(newArray[index1].color) //newArray[index1].color
-  tile1.textContent = newArray[index1].number +` `+ newArray[index1].color
+  tile1.textContent = newArray[index1].number + ` ` + newArray[index1].color
 })
 
 player2.forEach((tile2, index2) => {
   tile2.classList.add(newArray2[index2].color) //newArray[index1].color
-  tile2.textContent = newArray2[index2].number +` `+ newArray2[index2].color
+  tile2.textContent = newArray2[index2].number + ` ` + newArray2[index2].color
 })
+
+//removing the tails after they are distributed on the players
+
+//stockTileElement = stockTile[index] we bring the HTML element of the
+// side consbar
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! doesn't work !!!!!!!!!!!!
+newArray.forEach((item, index) => {
+  const currentTile = stockTile[index]
+  const isOrange = currentTile.id.startsWith("orange")
+  stockTile.forEach((tile, idx) => {
+    if (item.color === tile.color) {
+      stockTile.splice(idx, 1)
+    }
+  })
+})
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+console.log(newArray)
+console.log(newArray2)
+
+const startGame = () => {
+  alert("game started")
+}
+
+
+stButton.addEventListener("click", startGame)
+
+
+const yourTurn = () => {}
