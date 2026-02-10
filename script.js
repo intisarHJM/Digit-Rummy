@@ -1,14 +1,17 @@
-console.log("Hello sweaty")
+console.log("Hello sweetie")
 const orange = document.querySelectorAll(".orange-tile")
 const green = document.querySelectorAll(".green-tile")
 const blue = document.querySelectorAll(".blue-tile")
 const red = document.querySelectorAll(".red-tile")
 const smileyJocker = document.querySelectorAll(".smiley-tile")
-const playerRacks = document.querySelectorAll(".player-rack")
+//const playerRacks = document.querySelectorAll(".player-rack")
 const player1 = document.querySelectorAll(".p1-tiles")
 const player2 = document.querySelectorAll(".p2-tiles")
 const tileGroup = document.querySelectorAll(".tile-group")
 const stockTile = document.querySelectorAll(".tile")
+const p1Rack = document.querySelector("#player-1-rack .p1-tiles")
+const p2Rack = document.querySelector("#player-2-rack .p2-tiles")
+const mainBoard = document.querySelector(".main-board")
 
 const tiles = Array.from(stockTile).map((tile) => {
   const [color, number] = tile.id.split("-") // e.g.["orange", "1"]
@@ -113,12 +116,12 @@ const newArray2 = randomize()
 //newArray will return the randomized cards in objects array
 player1.forEach((tile1, index1) => {
   tile1.classList.add(newArray[index1].color) //newArray[index1].color
-  tile1.textContent = newArray[index1].number + ` ` + newArray[index1].color
+  // tile1.textContent = newArray[index1].number + ` ` + newArray[index1].color
 })
 
 player2.forEach((tile2, index2) => {
   tile2.classList.add(newArray2[index2].color) //newArray[index1].color
-  tile2.textContent = newArray2[index2].number + ` ` + newArray2[index2].color
+  //tile2.textContent = newArray2[index2].number + ` ` + newArray2[index2].color
 })
 
 //removing the tails after they are distributed on the players
@@ -139,6 +142,9 @@ newArray.forEach((item, index) => {
 
 console.log(newArray)
 console.log(newArray2)
+
+//p1-tiles //p2-tiles
+
 const players = ["p1", "p2"]
 
 let currentPlayer = 0
@@ -154,41 +160,81 @@ const turns = () => {
   }
 }
 
-const mainBoard = document.querySelector("#main-board")
+//console.log(mainBoard)
 
-//selectors of .tile(stock tiles) , .main-board, player1 , player2
-
-let draggedItem = 0
+let draggedObj = null // To store the object {number, color}
+window.draggedElement = null // To store the actual HTML div element
 
 newArray.forEach((item) => {
   const div = document.createElement("div")
-  div.classListName = "my-cards"
-  div.textContent = item.number
-  div.textContent = item.color
+
+  // classes of CSS applies the color
+  div.classList.add("tile", `${item.color}-tile`)
+  div.textContent = item.number === "joker" ? "☺" : item.number //if it's a joker give the smiley face if not just give the number instead
   div.draggable = true
-  //drag start
+
+  // Drag Start: Capture the element and the data
   div.addEventListener("dragstart", () => {
-    draggedItem = item
+    draggedObj = item
+    window.draggedElement = div // Store the <div> here
     div.classList.add("dragging")
   })
+  for (let slot of player1) {
+    if (slot.children.length === 0) {
+      slot.appendChild(div)
+      break
+    }
+  }
 
-  //drag end
-  div.addEventListener("dragend", () => {
-    draggedItem = null
-    div.classList.remove("dragging")
+  //------------------------------------------------------------------p2
+  newArray2.forEach((item) => {
+    const div = document.createElement("div")
+
+    div.classList.add("tile", `${item.color}-tile`)
+    div.textContent = item.number === "joker" ? "☺" : item.number
+    div.draggable = true
+
+    // Drag Start: Capture the element and the data
+    div.addEventListener("dragstart", () => {
+      draggedObj = item
+      window.draggedElement = div // Store the <div> here
+      div.classList.add("dragging")
+    })
+
+    div.addEventListener("dragend", () => {
+      div.classList.remove("dragging")
+    })
+
+    // Initial placement: Add to the first available player slot
+    // Find the first slot that doesn't have a tile yet
+    for (let slot of player2) {
+      if (slot.children.length === 0) {
+        slot.appendChild(div)
+        break
+      }
+    }
   })
-  newArray.appendChild(div)
-})
 
-//drop
+  //---------------------------------------------------------------------------
+})
+// 3. Drop Logic on the Main Board
 mainBoard.addEventListener("dragover", (event) => {
-  event.preventDefault() ////dragover will continue dragging until preventDefault() stops it so it will be dropped
+  event.preventDefault() // Required to allow dropping
 })
 
-mainBoard.addEventListener("drop", () => {
-  if (!draggedItem) return
+mainBoard.addEventListener("drop", (event) => {
+  event.preventDefault()
 
-  //remove from array
-  const index =
-  //add to the board
+  if (window.draggedElement) {
+    // This MOVEs the element from the rack to the board automatically
+    mainBoard.appendChild(window.draggedElement)
+
+    console.log("Moved tile:", draggedObj)
+
+    // this resets variables for the next drag
+    window.draggedElement = null
+    draggedObj = null
+  }
 })
+
+
