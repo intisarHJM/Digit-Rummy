@@ -35,6 +35,58 @@ console.log(red) */
 //main-board
 
 //random the tiles then add them to an empty array distreputing them on the players
+const randomOranges = () => {
+  const randomId = Math.floor(Math.random() * orange.length)
+  const randomCard = orange[randomId]
+
+  // return `${randomCard.textContent} orange tile`
+  return {
+    number: randomCard.textContent,
+    color: "orange",
+  }
+}
+
+//-----------//
+
+const randomRed = () => {
+  const randomId = Math.floor(Math.random() * red.length)
+  const randomCard = red[randomId]
+
+  return {
+    number: randomCard.textContent,
+    color: "red",
+  }
+}
+
+const randomGreen = () => {
+  const randomId = Math.floor(Math.random() * green.length)
+  const randomCard = green[randomId]
+
+  return {
+    number: randomCard.textContent,
+    color: "green",
+  }
+}
+
+const randomBlue = () => {
+  const randomId = Math.floor(Math.random() * blue.length)
+  const randomCard = blue[randomId]
+
+  return {
+    number: randomCard.textContent,
+    color: "blue",
+  }
+}
+
+const smileys = () => {
+  const randomId = Math.floor(Math.random() * smileyJocker.length)
+  const randomCard = smileyJocker[randomId]
+
+  return {
+    number: randomCard.textContent,
+    color: "Joker",
+  }
+}
 
 const randomize = () => {
   const rand = []
@@ -87,17 +139,56 @@ newArray.forEach((item, index) => {
 
 console.log(newArray)
 console.log(newArray2)
-
-const players = [p1, p2]
+const players = ["p1", "p2"]
 
 let currentPlayer = 0
+const turnHead = document.querySelector("#turn-head") // Use "#" to select by ID
 
 const turns = () => {
   if (currentPlayer === 0) {
     currentPlayer = 1
+    turnHead.textContent = "Player 2's turn" // Added apostrophe for clarity
   } else {
     currentPlayer = 0
+    turnHead.textContent = "Player 1's turn" // Added apostrophe for clarity
   }
 }
 
-const buttons = document.querySelectorAll(".buttons")
+const mainBoard = document.querySelector("#main-board")
+
+//selectors of .tile(stock tiles) , .main-board, player1 , player2
+
+let draggedItem = 0
+
+newArray.forEach((item) => {
+  const div = document.createElement("div")
+  div.classListName = "my-cards"
+  div.textContent = item.number
+  div.textContent = item.color
+  div.draggable = true
+  //drag start
+  div.addEventListener("dragstart", () => {
+    draggedItem = item
+    div.classList.add("dragging")
+  })
+
+  //drag end
+  div.addEventListener("dragend", () => {
+    draggedItem = null
+    div.classList.remove("dragging")
+  })
+  newArray.appendChild(div)
+})
+
+//drop
+mainBoard.addEventListener("dragover", (event) => {
+  event.preventDefault() ////dragover will continue dragging until preventDefault() stops it so it will be dropped
+})
+
+mainBoard.addEventListener("drop", () => {
+  if (!draggedItem) return
+
+  //remove from array
+  const index =
+  //add to the board
+})

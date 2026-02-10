@@ -92,11 +92,16 @@
             <div class="p1-tiles"></div>
             <div class="p1-tiles"></div>
             <div class="p1-tiles"></div>
-            <button class="buttons" id="show-p1">Done</button>
           </div>
 
           <div class="main-board" id="game-table">
-            <h1>Main Board (Play sets here)</h1>
+            <h1>
+              Main Board (Play sets here) <br />
+              <h2 id="turn-head">Who's turn is now?</h2>
+            </h1>
+            <button class="buttons" id="show-p2" onclick="turns()">
+              Next Player
+            </button>
           </div>
 
           <div class="player-rack" id="player-2-rack">
@@ -113,7 +118,6 @@
             <div class="p2-tiles"></div>
             <div class="p2-tiles"></div>
             <div class="p2-tiles"></div>
-            <button class="buttons" id="show-p2">Done</button>
           </div>
         </section>
       </section>
