@@ -9,7 +9,6 @@ const player1 = document.querySelectorAll(".p1-tiles")
 const player2 = document.querySelectorAll(".p2-tiles")
 const tileGroup = document.querySelectorAll(".tile-group")
 const stockTile = document.querySelectorAll(".tile")
-const stButton = document.querySelector("#start")
 
 const tiles = Array.from(stockTile).map((tile) => {
   const [color, number] = tile.id.split("-") // e.g.["orange", "1"]
@@ -35,65 +34,9 @@ console.log(red) */
 //.tile-group
 //main-board
 
-const startButton = document.querySelectorAll("button")
-console.log(startButton[1])
-
-const start = startButton[1].textContent
-
 //random the tiles then add them to an empty array distreputing them on the players
 
 const randomize = () => {
-  const randomOranges = () => {
-    const randomId = Math.floor(Math.random() * orange.length)
-    const randomCard = orange[randomId]
-
-    // return `${randomCard.textContent} orange tile`
-    return {
-      number: randomCard.textContent,
-      color: "orange",
-    }
-  }
-
-  //-----------//
-  const randomRed = () => {
-    const randomId = Math.floor(Math.random() * red.length)
-    const randomCard = red[randomId]
-
-    return {
-      number: randomCard.textContent,
-      color: "red",
-    }
-  }
-
-  const randomGreen = () => {
-    const randomId = Math.floor(Math.random() * green.length)
-    const randomCard = green[randomId]
-
-    return {
-      number: randomCard.textContent,
-      color: "green",
-    }
-  }
-
-  const randomBlue = () => {
-    const randomId = Math.floor(Math.random() * blue.length)
-    const randomCard = blue[randomId]
-
-    return {
-      number: randomCard.textContent,
-      color: "blue",
-    }
-  }
-
-  const smileys = () => {
-    const randomId = Math.floor(Math.random() * smileyJocker.length)
-    const randomCard = smileyJocker[randomId]
-
-    return {
-      number: randomCard.textContent,
-      color: "Joker",
-    }
-  }
   const rand = []
   const jokerChance = 0.2
   for (let index = 0; index < 3; index++) {
@@ -129,7 +72,7 @@ player2.forEach((tile2, index2) => {
 //removing the tails after they are distributed on the players
 
 //stockTileElement = stockTile[index] we bring the HTML element of the
-// side consbar
+// side Bar
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! doesn't work !!!!!!!!!!!!
 newArray.forEach((item, index) => {
   const currentTile = stockTile[index]
@@ -145,12 +88,16 @@ newArray.forEach((item, index) => {
 console.log(newArray)
 console.log(newArray2)
 
-const startGame = () => {
-  alert("game started")
+const players = [p1, p2]
+
+let currentPlayer = 0
+
+const turns = () => {
+  if (currentPlayer === 0) {
+    currentPlayer = 1
+  } else {
+    currentPlayer = 0
+  }
 }
 
-
-stButton.addEventListener("click", startGame)
-
-
-const yourTurn = () => {}
+const buttons = document.querySelectorAll(".buttons")
