@@ -166,6 +166,13 @@ const player1_turn = () => {
 
     // Drag Start: Capture the element and the data
     div.addEventListener("dragstart", () => {
+
+      if (currentPlayer !== 0) {
+        e.preventDefault(); // Stop the drag
+        alert("It's not your turn, Player 1!");
+        return;
+    }
+
       draggedObj = item
       window.draggedElement = div // Store the <div> here
       originalOwner = 0 //the tile belongs to p1
@@ -192,6 +199,11 @@ const player2_turn = () => {
 
     // Drag Start: Capture the element and the data
     div.addEventListener("dragstart", () => {
+      if (currentPlayer !== 1) {
+        e.preventDefault(); // Stop the drag
+        alert("It's not your turn, Player 2!");
+        return;
+    }
       draggedObj = item
       window.draggedElement = div // Store the <div> here
       originalOwner = 1 //the tile belongs to p2
@@ -230,7 +242,7 @@ sets.forEach((setSlot) => {
 
       const tilesInThisSet = Array.from(setSlot.children)
 
-      if (tilesInThisSet.length >= 2) {
+      if (tilesInThisSet.length >= 3) {
         const currentTileEl = window.draggedElement
         const prevTileEl = tilesInThisSet[tilesInThisSet.length - 2]
 
@@ -244,6 +256,7 @@ sets.forEach((setSlot) => {
         if (currentVal === "☺" || prevVal === "☺") {
           console.log("☺ Joker used!")
           isMoveValid = true
+          checkWinner()
         } else {
           // 3. MATH CHECK: Only if there is NO joker
           const cNum = Number(currentVal)
@@ -267,7 +280,8 @@ sets.forEach((setSlot) => {
           const isSameNumber = cNum === pNum
           const isDiffColor = getCurrentColor() !== getPrevColor()
 
-          isMoveValid = (isSameColor && isConsecutive) || (isSameNumber && isDiffColor)
+          isMoveValid =
+            (isSameColor && isConsecutive) || (isSameNumber && isDiffColor)
         }
 
         // 4. REJECTION: If invalid, send back to correct owner
@@ -280,6 +294,8 @@ sets.forEach((setSlot) => {
               break
             }
           }
+        } else {
+          checkWinner()
         }
       }
 
@@ -336,3 +352,26 @@ const startGame = () => {
 }
 
 //startGame()
+
+const checkWinner = () => {
+  // We check the player racks to see if they are empty
+  const p1TilesLeft = Array.from(player1).some(
+    (slot) => slot.children.length > 0
+  )
+  const p2TilesLeft = Array.from(player2).some(
+    (slot) => slot.children.length > 0
+  )
+
+  const screen = document.querySelector("#winner-screen")
+  const winText = document.querySelector("#winner-text")
+
+  if (!p1TilesLeft) {
+    winText.textContent = "PLAYER 1 WINS!"
+    screen.style.display = "flex"
+    document.querySelector(".game").style.opacity = "0.3" // Decrease opacity of game
+  } else if (!p2TilesLeft) {
+    winText.textContent = "PLAYER 2 WINS!"
+    screen.style.display = "flex"
+    document.querySelector(".game").style.opacity = "0.3"
+  }
+}
