@@ -152,7 +152,7 @@ const turns = () => {
 
 let draggedObj = null // To store the object {number, color}
 window.draggedElement = null // To store the actual HTML div element
-let originalOwner = null; //who is the owner of the rejected tile
+let originalOwner = null //who is the owner of the rejected tile
 
 const player1_turn = () => {
   newArray.forEach((item) => {
@@ -168,7 +168,7 @@ const player1_turn = () => {
     div.addEventListener("dragstart", () => {
       draggedObj = item
       window.draggedElement = div // Store the <div> here
-      originalOwner=0  //the tile belongs to p1
+      originalOwner = 0 //the tile belongs to p1
       div.classList.add("dragging")
     })
 
@@ -194,7 +194,7 @@ const player2_turn = () => {
     div.addEventListener("dragstart", () => {
       draggedObj = item
       window.draggedElement = div // Store the <div> here
-      originalOwner=1 //the tile belongs to p2
+      originalOwner = 1 //the tile belongs to p2
       div.classList.add("dragging")
     })
 
@@ -215,74 +215,79 @@ const player2_turn = () => {
 
 //---------------------------------------------------------------------------
 
-// 3. Drop Logic on the Main Board
+// 3. Drop Logic on the divs that are inside the container inside the main boards
 sets.forEach((setSlot) => {
   setSlot.addEventListener("dragover", (event) => {
-    event.preventDefault();
-  });
+    event.preventDefault()
+  })
 
   setSlot.addEventListener("drop", (event) => {
-    event.preventDefault();
+    event.preventDefault()
 
-    if (window.draggedElement && draggedObj) {
+    if (window.draggedElement) {
       // 1. Put the tile in the box
-      setSlot.appendChild(window.draggedElement);
+      setSlot.appendChild(window.draggedElement)
 
-      // 2. Get all tiles in THIS box to check them
-      const tilesInThisSet = Array.from(setSlot.children);
+      const tilesInThisSet = Array.from(setSlot.children)
 
-      // 3. If there's more than one tile, check if the new one matches the last one
-      if (tilesInThisSet.length >= 3) {
-        const currentTileEl = window.draggedElement;
-        const prevTileEl = tilesInThisSet[tilesInThisSet.length - 2];
+      if (tilesInThisSet.length >= 2) {
+        const currentTileEl = window.draggedElement
+        const prevTileEl = tilesInThisSet[tilesInThisSet.length - 2]
 
-        // Get numbers from the text inside the div
-        const currentNum = Number(currentTileEl.textContent);
-        const prevNum = Number(prevTileEl.textContent);
+        // Get the actual text (character or number)
+        const currentVal = currentTileEl.textContent.trim()
+        const prevVal = prevTileEl.textContent.trim()
 
-        // Get colors by checking the classList
-        const getCurrentColor = () => {
-            if (currentTileEl.classList.contains("orange-tile")) return "orange";
-            if (currentTileEl.classList.contains("green-tile")) return "green";
-            if (currentTileEl.classList.contains("blue-tile")) return "blue";
-            if (currentTileEl.classList.contains("red-tile")) return "red";
-        };
-        const getPrevColor = () => {
-            if (prevTileEl.classList.contains("orange-tile")) return "orange";
-            if (prevTileEl.classList.contains("green-tile")) return "green";
-            if (prevTileEl.classList.contains("blue-tile")) return "blue";
-            if (prevTileEl.classList.contains("red-tile")) return "red";
-        };
+        // 2. JOKER CHECK: If either tile is the smiley, it's always valid
+        let isMoveValid = false
 
-        const isConsecutive = currentNum === prevNum + 1;
-        const isSameColor = getCurrentColor() === getPrevColor();
-        const isSameNumber = currentNum === prevNum;
-        const isDiffColor = getCurrentColor() !== getPrevColor();
+        if (currentVal === "☺" || prevVal === "☺") {
+          console.log("☺ Joker used!")
+          isMoveValid = true
+        } else {
+          // 3. MATH CHECK: Only if there is NO joker
+          const cNum = Number(currentVal)
+          const pNum = Number(prevVal)
 
-        // The Rummy Rule
-        let isMoveValid = (isSameColor && isConsecutive) || (isSameNumber && isDiffColor);
+          const getCurrentColor = () => {
+            if (currentTileEl.classList.contains("orange-tile")) return "orange"
+            if (currentTileEl.classList.contains("green-tile")) return "green"
+            if (currentTileEl.classList.contains("blue-tile")) return "blue"
+            if (currentTileEl.classList.contains("red-tile")) return "red"
+          }
+          const getPrevColor = () => {
+            if (prevTileEl.classList.contains("orange-tile")) return "orange"
+            if (prevTileEl.classList.contains("green-tile")) return "green"
+            if (prevTileEl.classList.contains("blue-tile")) return "blue"
+            if (prevTileEl.classList.contains("red-tile")) return "red"
+          }
 
+          const isConsecutive = cNum === pNum + 1
+          const isSameColor = getCurrentColor() === getPrevColor()
+          const isSameNumber = cNum === pNum
+          const isDiffColor = getCurrentColor() !== getPrevColor()
+
+          isMoveValid = (isSameColor && isConsecutive) || (isSameNumber && isDiffColor)
+        }
+
+        // 4. REJECTION: If invalid, send back to correct owner
         if (!isMoveValid) {
-          alert("Invalid Move!");
-
-          // Use our memory variable to find the right rack
-          let ownerRack = (originalOwner === 0) ? player1 : player2;
-
+          alert("Invalid Move!")
+          let ownerRack = originalOwner === 0 ? player1 : player2
           for (let slot of ownerRack) {
             if (slot.children.length === 0) {
-              slot.appendChild(window.draggedElement);
-              break;
+              slot.appendChild(window.draggedElement)
+              break
             }
           }
         }
       }
 
-      // Clear memory for next drag
-      window.draggedElement = null;
-      draggedObj = null;
+      window.draggedElement = null
+      draggedObj = null
     }
-  });
-});
+  })
+})
 
 /* const startButton = document.createElement('button')
 
