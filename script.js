@@ -1,4 +1,3 @@
-console.log("Hello sweetie")
 const orange = document.querySelectorAll(".orange-tile")
 const green = document.querySelectorAll(".green-tile")
 const blue = document.querySelectorAll(".blue-tile")
@@ -11,7 +10,10 @@ const tileGroup = document.querySelectorAll(".tile-group")
 const stockTile = document.querySelectorAll(".tile")
 const p1Rack = document.querySelector("#player-1-rack .p1-tiles")
 const p2Rack = document.querySelector("#player-2-rack .p2-tiles")
-const mainBoard = document.querySelector(".main-board")
+const containerOfSets = document.querySelector(".container")
+const sets = document.querySelectorAll(".sets")
+
+//console.log(sets)
 
 const tiles = Array.from(stockTile).map((tile) => {
   const [color, number] = tile.id.split("-") // e.g.["orange", "1"]
@@ -86,7 +88,7 @@ const smileys = () => {
   const randomCard = smileyJocker[randomId]
 
   return {
-    number: Number(randomCard.textContent),
+    number: randomCard.textContent,
     color: "Joker",
   }
 }
@@ -124,53 +126,63 @@ player2.forEach((tile2, index2) => {
   //tile2.textContent = newArray2[index2].number + ` ` + newArray2[index2].color
 })
 
-console.log(newArray)
-console.log(newArray2)
+//console.log(newArray)
+//console.log(newArray2)
 
 //p1-tiles //p2-tiles
 
 const players = ["p1", "p2"]
 
 let currentPlayer = 0
-const turnHead = document.querySelector("#turn-head") // Use "#" to select by ID
+const turnHead = document.querySelector("#turn-head")
 
 const turns = () => {
   if (currentPlayer === 0) {
     currentPlayer = 1
-    turnHead.textContent = "Player 2's turn" // Added apostrophe for clarity
+    player2_turn()
+    turnHead.textContent = `Player 2 turn`
   } else {
     currentPlayer = 0
-    turnHead.textContent = "Player 1's turn" // Added apostrophe for clarity
+    player1_turn()
+    turnHead.textContent = `Player 1 turn`
   }
 }
 
-//console.log(mainBoard)
+//console.log(sets)
 
 let draggedObj = null // To store the object {number, color}
 window.draggedElement = null // To store the actual HTML div element
+let originalOwner = null; //who is the owner of the rejected tile
 
-newArray.forEach((item) => {
-  const div = document.createElement("div")
+const player1_turn = () => {
+  newArray.forEach((item) => {
+    const div = document.createElement("div")
+    div.setAttribute
 
-  // classes of CSS applies the color
-  div.classList.add("tile", `${item.color}-tile`)
-  div.textContent = item.number === "joker" ? "☺" : item.number //if it's a joker give the smiley face if not just give the number instead
-  div.draggable = true
+    // classes of CSS applies the color
+    div.classList.add("tile", `${item.color}-tile`)
+    div.textContent = item.number === "joker" ? "☺" : item.number //if it's a joker give the smiley face if not just give the number instead
+    div.draggable = true
 
-  // Drag Start: Capture the element and the data
-  div.addEventListener("dragstart", () => {
-    draggedObj = item
-    window.draggedElement = div // Store the <div> here
-    div.classList.add("dragging")
-  })
-  for (let slot of player1) {
-    if (slot.children.length === 0) {
-      slot.appendChild(div)
-      break
+    // Drag Start: Capture the element and the data
+    div.addEventListener("dragstart", () => {
+      draggedObj = item
+      window.draggedElement = div // Store the <div> here
+      originalOwner=0  //the tile belongs to p1
+      div.classList.add("dragging")
+    })
+
+    for (let card of player1) {
+      if (card.children.length === 0) {
+        card.appendChild(div)
+        break
+      }
     }
-  }
+  })
+}
 
-  //------------------------------------------------------------------p2
+//------------------------------------------------------------------p2
+const player2_turn = () => {
   newArray2.forEach((item) => {
     const div = document.createElement("div")
 
@@ -182,6 +194,7 @@ newArray.forEach((item) => {
     div.addEventListener("dragstart", () => {
       draggedObj = item
       window.draggedElement = div // Store the <div> here
+      originalOwner=1 //the tile belongs to p2
       div.classList.add("dragging")
     })
 
@@ -189,54 +202,102 @@ newArray.forEach((item) => {
       div.classList.remove("dragging")
     })
 
-    // Initial placement: Add to the first available player slot
-    // Find the first slot that doesn't have a tile yet
-    for (let slot of player2) {
-      if (slot.children.length === 0) {
-        slot.appendChild(div)
+    // Initial placement: Add to the first available player card
+    // Find the first card that doesn't have a tile yet
+    for (let card of player2) {
+      if (card.children.length === 0) {
+        card.appendChild(div)
         break
       }
     }
   })
+}
 
-  //---------------------------------------------------------------------------
-})
+//---------------------------------------------------------------------------
+
 // 3. Drop Logic on the Main Board
-mainBoard.addEventListener("dragover", (event) => {
-  event.preventDefault() // Required to allow dropping
-})
+sets.forEach((setSlot) => {
+  setSlot.addEventListener("dragover", (event) => {
+    event.preventDefault();
+  });
 
-mainBoard.addEventListener("drop", (event) => {
-  event.preventDefault()
+  setSlot.addEventListener("drop", (event) => {
+    event.preventDefault();
 
-  if (window.draggedElement) {
-    // This MOVEs the element from the rack to the board automatically
-    mainBoard.appendChild(window.draggedElement)
+    if (window.draggedElement && draggedObj) {
+      // 1. Put the tile in the box
+      setSlot.appendChild(window.draggedElement);
 
-    console.log("Moved tile:", draggedObj)
+      // 2. Get all tiles in THIS box to check them
+      const tilesInThisSet = Array.from(setSlot.children);
 
-    // this resets variables for the next drag
-    window.draggedElement = null
-    draggedObj = null
-  }
-})
+      // 3. If there's more than one tile, check if the new one matches the last one
+      if (tilesInThisSet.length >= 3) {
+        const currentTileEl = window.draggedElement;
+        const prevTileEl = tilesInThisSet[tilesInThisSet.length - 2];
+
+        // Get numbers from the text inside the div
+        const currentNum = Number(currentTileEl.textContent);
+        const prevNum = Number(prevTileEl.textContent);
+
+        // Get colors by checking the classList
+        const getCurrentColor = () => {
+            if (currentTileEl.classList.contains("orange-tile")) return "orange";
+            if (currentTileEl.classList.contains("green-tile")) return "green";
+            if (currentTileEl.classList.contains("blue-tile")) return "blue";
+            if (currentTileEl.classList.contains("red-tile")) return "red";
+        };
+        const getPrevColor = () => {
+            if (prevTileEl.classList.contains("orange-tile")) return "orange";
+            if (prevTileEl.classList.contains("green-tile")) return "green";
+            if (prevTileEl.classList.contains("blue-tile")) return "blue";
+            if (prevTileEl.classList.contains("red-tile")) return "red";
+        };
+
+        const isConsecutive = currentNum === prevNum + 1;
+        const isSameColor = getCurrentColor() === getPrevColor();
+        const isSameNumber = currentNum === prevNum;
+        const isDiffColor = getCurrentColor() !== getPrevColor();
+
+        // The Rummy Rule
+        let isMoveValid = (isSameColor && isConsecutive) || (isSameNumber && isDiffColor);
+
+        if (!isMoveValid) {
+          alert("Invalid Move!");
+
+          // Use our memory variable to find the right rack
+          let ownerRack = (originalOwner === 0) ? player1 : player2;
+
+          for (let slot of ownerRack) {
+            if (slot.children.length === 0) {
+              slot.appendChild(window.draggedElement);
+              break;
+            }
+          }
+        }
+      }
+
+      // Clear memory for next drag
+      window.draggedElement = null;
+      draggedObj = null;
+    }
+  });
+});
 
 /* const startButton = document.createElement('button')
 
 startButton.textContent ='START'
 startButton.classList.add('buttons')
 console.log(startButton) */
-
-const startGame = () => {
-  /*if the game starts randomize the cards
+/*if the game starts randomize the cards
 player 1 starts if he have 10-11-12 with same colours*/
 
-  /*  console.log(tiles[1].color)
+/*  console.log(tiles[1].color)
 console.log(newArray[1].color) */
 
-  //for loop that takes one of the players tails compare it with all the tails in the stock and remove it if they have same color and number
-  //removing the tails after they are distributed on the players
-
+//for loop that takes one of the players tails compare it with all the tails in the stock and remove it if they have same color and number
+//removing the tails after they are distributed on the players
+const startGame = () => {
   newArray.forEach((player1_tile, i) => {
     let currentTiles = newArray[i]
     tiles.forEach((stock_tail, index) => {
@@ -266,7 +327,7 @@ console.log(newArray[1].color) */
       }
     })
   })
-  console.log(tiles)
+  //console.log(tiles)
 }
 
-startGame()
+//startGame()
