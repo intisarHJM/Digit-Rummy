@@ -246,19 +246,6 @@ const player2_turn = () => {
       window.draggedElement = div // Store the <div> here
       originalOwner = 1 //the tile belongs to p2
       div.classList.add("dragging")
-
-      //after the tile is placed player can change their minds
-      window.draggedElement.addEventListener("dragstart", (event) => {
-        // only move if its the current player turn
-        if (originalOwner !== currentPlayer) {
-          event.preventDefault()
-          alert("You can't move this tile right now!")
-          return
-        }
-
-        // this moves the tile back
-        window.draggedElement = event.target
-      })
     })
 
     div.addEventListener("dragend", () => {
@@ -358,7 +345,44 @@ sets.forEach((setSlot) => {
     }
   })
 })
+//after the tile is placed player can change their minds
 
+// Combine both player racks into one list to apply listeners
+const both_players_array = [...player1, ...player2]
+
+both_players_array.forEach((rack) => {
+  // Tell the browser this slot is a valid place to drop things
+  rack.addEventListener("dragover", (e) => {
+    e.preventDefault()
+  })
+
+  // 2. Handle the actual drop
+  rack.addEventListener("drop", (e) => {
+    e.preventDefault()
+
+    if (window.draggedElement) {
+      // Check if the slot is already taken
+
+      if (rack.children.length > 0) {
+        alert("This slot is already full!")
+        return
+      }
+
+      // Check which rack this slot belongs to
+      const isP1Rack = Array.from(player1).includes(rack)
+      const isP2Rack = Array.from(player2).includes(rack)
+
+      //  Only allow the current player to take tiles back
+      if (currentPlayer === 0 && isP1Rack) {
+        rack.appendChild(window.draggedElement)
+      } else if (currentPlayer === 1 && isP2Rack) {
+        rack.appendChild(window.draggedElement)
+      } else {
+        alert("You can only take tiles back into your own rack!")
+      }
+    }
+  })
+})
 /* const startButton = document.createElement('button')
 
 startButton.textContent ='START'
@@ -377,11 +401,11 @@ const startGame = () => {
   player2_turn()
 
   player1.forEach((rack) => {
-    //if (rack.children.length > 0) rack.children[0].style.display = "block"
+    if (rack.children.length > 0) rack.style.display = "block"
   })
 
   player2.forEach((rack) => {
-    if (rack.children.length > 0) rack.children[0].style.display = "none"
+    if (rack.children.length > 0) rack.style.display = "none"
   })
 
   turnHead.textContent = "Player 1 turn"
@@ -420,41 +444,28 @@ const startGame = () => {
   display_stockpile()
 }
 
-
-
 const display_stockpile = () => {
-  const tileGroup = document.querySelector(".tile-group");
+  const tileGroup = document.querySelector(".tile-group")
 
   if (!tileGroup) {
-    console.error("Could not find the .tile-group element!");
-    return;
+    console.error("Could not find the .tile-group element!")
+    return
   }
 
-  // 2. Clear the screen
-  tileGroup.innerHTML = "";
+  //Clear the screen
+  tileGroup.innerHTML = ""
 
-  // 3. Loop through your array of objects
   tiles.forEach((tileObject) => {
-    // Create the physical <div> for the screen
-    const div = document.createElement("div");
+    const div = document.createElement("div")
 
-    // 4. Use your 2 attributes: color and number
-    div.classList.add("tile", `${tileObject.color}-tile`);
+    div.classList.add("tile", `${tileObject.color}-tile`)
+    div.textContent = tileObject.number === "joker" ? "☺" : tileObject.number
 
-    // Check if it's a joker or a number
-    div.textContent = tileObject.number === "joker" ? "☺" : tileObject.number;
+    div.draggable = true
 
-    div.draggable = true;
-
-    // 5. Add it to the visual box
-    tileGroup.appendChild(div);
-  });
-};
-
-
-
-
-
+    tileGroup.appendChild(div)
+  })
+}
 
 const checkWinner = () => {
   // We check the player racks to see if they are empty
@@ -479,19 +490,56 @@ const checkWinner = () => {
   }
 }
 
-
-const restart = document.querySelector('#restarter')
-restart.addEventListener('mouseenter', ()=>{
-
-restart.innerHTML.style.color
-
-
+const restart = document.querySelector("#restarter")
+restart.addEventListener("mouseenter", () => {
+  restart.innerHTML.style.color
 })
-
 
 const next_button = document.getElementById("show")
 next_button.addEventListener("click", () => {
   turns()
+})
+
+const draw = document.querySelector("#draw-button")
+draw.addEventListener("click", () => {
+  if (tiles.length === 0) {
+    console.log("stock is empty")
+    return
+  }
+
+  let currentRack
+
+  if (currentPlayer === 0) {
+    currentRack = player1
+  } else {
+    currentRack = player2
+  }
+
+  const emptySlot = currentRack.find((slot) => slot.children.length === 0) //Find the first empty slot in that rack
+
+  if (emptySlot) {
+    const randomIndex = Math.floor(Math.random() * tiles.length)
+
+    const drawnTile = tiles.splice(randomIndex, 1)[0]
+
+    const div = document.createElement("div")
+    div.classList.add("tile", `${drawnTile.color}-tile`)
+    div.textContent = drawnTile.number === "joker" ? "☺" : drawnTile.number
+    div.draggable = true
+
+    div.addEventListener("dragstart", (event) => {
+      window.draggedElement = event.target
+    })
+
+    emptySlot.appendChild(div)
+    display_stockpile()
+
+    console.log(
+      `Drew a ${drawnTile.color} ${drawnTile.number}. Tiles left: ${tiles.length}`
+    )
+  } else {
+    alert("Your rack is full!")
+  }
 })
 
 startGame()

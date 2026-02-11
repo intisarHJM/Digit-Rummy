@@ -67,13 +67,14 @@ h1 {
 }
 .smiley-tile {
   background-color: rgb(224, 21, 99);
-  border: 1px solid rgb(255, 255, 255);
-  color: gold;
+
+  color: rgb(6, 6, 4);
+  font-size: larger;
 }
 
 .action-zone {
   display: flex;
-  flex-direction: column; /* Stacks P1, Board, P2, and Button vertically */
+  flex-direction: column;
   height: 100%;
   gap: 10px;
   background-color: #ebe5ef;
