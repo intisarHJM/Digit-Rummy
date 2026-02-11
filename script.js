@@ -44,7 +44,7 @@ const randomOranges = () => {
 
   // return `${randomCard.textContent} orange tile`
   return {
-    number: randomCard.textContent,
+    number: Number(randomCard.textContent),
     color: "orange",
   }
 }
@@ -56,7 +56,7 @@ const randomRed = () => {
   const randomCard = red[randomId]
 
   return {
-    number: randomCard.textContent,
+    number: Number(randomCard.textContent),
     color: "red",
   }
 }
@@ -66,7 +66,7 @@ const randomGreen = () => {
   const randomCard = green[randomId]
 
   return {
-    number: randomCard.textContent,
+    number: Number(randomCard.textContent),
     color: "green",
   }
 }
@@ -76,7 +76,7 @@ const randomBlue = () => {
   const randomCard = blue[randomId]
 
   return {
-    number: randomCard.textContent,
+    number: Number(randomCard.textContent),
     color: "blue",
   }
 }
@@ -86,7 +86,7 @@ const smileys = () => {
   const randomCard = smileyJocker[randomId]
 
   return {
-    number: randomCard.textContent,
+    number: Number(randomCard.textContent),
     color: "Joker",
   }
 }
@@ -123,22 +123,6 @@ player2.forEach((tile2, index2) => {
   tile2.classList.add(newArray2[index2].color) //newArray[index1].color
   //tile2.textContent = newArray2[index2].number + ` ` + newArray2[index2].color
 })
-
-//removing the tails after they are distributed on the players
-
-//stockTileElement = stockTile[index] we bring the HTML element of the
-// side Bar
-//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! doesn't work !!!!!!!!!!!!
-newArray.forEach((item, index) => {
-  const currentTile = stockTile[index]
-  const isOrange = currentTile.id.startsWith("orange")
-  stockTile.forEach((tile, idx) => {
-    if (item.color === tile.color) {
-      stockTile.splice(idx, 1)
-    }
-  })
-})
-//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 console.log(newArray)
 console.log(newArray2)
@@ -237,4 +221,52 @@ mainBoard.addEventListener("drop", (event) => {
   }
 })
 
+/* const startButton = document.createElement('button')
 
+startButton.textContent ='START'
+startButton.classList.add('buttons')
+console.log(startButton) */
+
+const startGame = () => {
+  /*if the game starts randomize the cards
+player 1 starts if he have 10-11-12 with same colours*/
+
+  /*  console.log(tiles[1].color)
+console.log(newArray[1].color) */
+
+  //for loop that takes one of the players tails compare it with all the tails in the stock and remove it if they have same color and number
+  //removing the tails after they are distributed on the players
+
+  newArray.forEach((player1_tile, i) => {
+    let currentTiles = newArray[i]
+    tiles.forEach((stock_tail, index) => {
+      let remainingTailes = tiles[index]
+      if (
+        player1_tile.color === stock_tail.color &&
+        player1_tile.number === stock_tail.number
+      ) {
+        tiles.length--
+        tiles.splice(index, 1)
+      }
+    })
+  })
+  console.log(tiles)
+
+  //player 2 cards remove
+  newArray2.forEach((player1_tile, i) => {
+    let currentTiles2 = newArray2[i]
+    tiles.forEach((stock_tail, index) => {
+      let remainingTailes = tiles[index]
+      if (
+        player1_tile.color === stock_tail.color &&
+        player1_tile.number === stock_tail.number
+      ) {
+        //tiles.length--
+        tiles.splice(index, 1)
+      }
+    })
+  })
+  console.log(tiles)
+}
+
+startGame()

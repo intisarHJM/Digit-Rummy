@@ -146,15 +146,16 @@ h1 {
 }
 
 .buttons{
-   display: flex;
+  display: flex;
   width: 500px;
   justify-content: center;
- ma
+  margin:50px;
   font-size: xx-large;
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
   border-radius: 30px;
   background-color: #d2e99f;
   cursor: pointer;
+  gap: 50px;
 }
 
 
@@ -168,4 +169,15 @@ background-color: #4d94ff;
 grid-template-columns: 50;
 
 
+}
+
+#turn-head{
+justify-content: center;
+  margin:50px;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  border-radius: 40px;
+  background-color: #d2e99f;
+  cursor: pointer;
+  border-color: #000000;
+  margin-bottom: -30px;
 }
