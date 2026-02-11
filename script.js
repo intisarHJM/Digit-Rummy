@@ -6,7 +6,7 @@ const smileyJocker = document.querySelectorAll(".smiley-tile")
 //const playerRacks = document.querySelectorAll(".player-rack")
 const player1 = document.querySelectorAll(".p1-tiles")
 const player2 = document.querySelectorAll(".p2-tiles")
-const tileGroup = document.querySelectorAll(".tile-group")
+const tileGroup = document.querySelector(".tile-group")
 const stockTile = document.querySelectorAll(".tile")
 const p1Rack = document.querySelector("#player-1-rack .p1-tiles")
 const p2Rack = document.querySelector("#player-2-rack .p2-tiles")
@@ -134,9 +134,19 @@ player2.forEach((tile2, index2) => {
 const players = ["p1", "p2"]
 
 let currentPlayer = 0
+
 const turnHead = document.querySelector("#turn-head")
+let isMoveValid = false
 
 const turns = () => {
+  if (!hasMadeValidSet) {
+    alert(
+      "You must place a valid set of at least 3 tiles before ending your turn!"
+    )
+    return
+  }
+
+  hasMadeValidSet = false
   if (currentPlayer === 0) {
     currentPlayer = 1
     player2_turn()
@@ -146,6 +156,29 @@ const turns = () => {
     player1_turn()
     turnHead.textContent = `Player 1 turn`
   }
+  player1.forEach((rack) => {
+    if (rack.children.length > 0) {
+      let tile = rack.children[0]
+      if (currentPlayer === 0) {
+        tile.style.display = "block"
+      } else {
+        tile.style.display = "none"
+      }
+    }
+  })
+
+  player2.forEach((rack) => {
+    if (rack.children.length > 0) {
+      let tile = rack.children[0]
+      if (currentPlayer === 1) {
+        // Show if it's Player 2's turn
+        tile.style.display = "block"
+      } else {
+        tile.style.display = "none"
+      }
+    }
+  })
+  hasMadeValidSet = false
 }
 
 //console.log(sets)
@@ -164,28 +197,33 @@ const player1_turn = () => {
     div.textContent = item.number === "joker" ? "☺" : item.number //if it's a joker give the smiley face if not just give the number instead
     div.draggable = true
 
-    // Drag Start: Capture the element and the data
-    div.addEventListener("dragstart", () => {
-
-      if (currentPlayer !== 0) {
-        e.preventDefault(); // Stop the drag
-        alert("It's not your turn, Player 1!");
-        return;
-    }
-
-      draggedObj = item
-      window.draggedElement = div // Store the <div> here
-      originalOwner = 0 //the tile belongs to p1
-      div.classList.add("dragging")
-    })
-
     for (let card of player1) {
       if (card.children.length === 0) {
         card.appendChild(div)
         break
       }
     }
+
+    // Drag Start: Capture the element and the data
+    div.addEventListener("dragstart", () => {
+      if (currentPlayer !== 0) {
+        e.preventDefault() // Stop the drag
+        alert("It's not your turn, Player 1!")
+        return
+      }
+
+      draggedObj = item
+      window.draggedElement = div // Store the <div> here
+      originalOwner = 0 //the tile belongs to p1
+      div.classList.add("dragging")
+    })
   })
+  for (let card of player1) {
+    if (card.children.length === 0) {
+      card.appendChild(div)
+      break
+    }
+  }
 }
 
 //------------------------------------------------------------------p2
@@ -200,14 +238,27 @@ const player2_turn = () => {
     // Drag Start: Capture the element and the data
     div.addEventListener("dragstart", () => {
       if (currentPlayer !== 1) {
-        e.preventDefault(); // Stop the drag
-        alert("It's not your turn, Player 2!");
-        return;
-    }
+        e.preventDefault() // Stop the drag
+        alert("It's not your turn, Player 2!")
+        return
+      }
       draggedObj = item
       window.draggedElement = div // Store the <div> here
       originalOwner = 1 //the tile belongs to p2
       div.classList.add("dragging")
+
+      //after the tile is placed player can change their minds
+      window.draggedElement.addEventListener("dragstart", (event) => {
+        // only move if its the current player turn
+        if (originalOwner !== currentPlayer) {
+          event.preventDefault()
+          alert("You can't move this tile right now!")
+          return
+        }
+
+        // this moves the tile back
+        window.draggedElement = event.target
+      })
     })
 
     div.addEventListener("dragend", () => {
@@ -229,73 +280,76 @@ const player2_turn = () => {
 
 // 3. Drop Logic on the divs that are inside the container inside the main boards
 sets.forEach((setSlot) => {
-  setSlot.addEventListener("dragover", (event) => {
-    event.preventDefault()
-  })
+  setSlot.addEventListener("dragover", (e) => e.preventDefault())
 
   setSlot.addEventListener("drop", (event) => {
     event.preventDefault()
 
-    if (window.draggedElement) {
-      // 1. Put the tile in the box
+    if (window.draggedElement && draggedObj) {
+      // 1. Move the tile into this specific box
       setSlot.appendChild(window.draggedElement)
 
+      // 2. Get all tiles currently inside THIS box
       const tilesInThisSet = Array.from(setSlot.children)
 
-      if (tilesInThisSet.length >= 3) {
+      // 3. Validation: Only check if there are 2 or more tiles
+      if (tilesInThisSet.length >= 2) {
         const currentTileEl = window.draggedElement
         const prevTileEl = tilesInThisSet[tilesInThisSet.length - 2]
 
-        // Get the actual text (character or number)
-        const currentVal = currentTileEl.textContent.trim()
-        const prevVal = prevTileEl.textContent.trim()
+        // Get values for comparison
+        const currentNum = Number(currentTileEl.textContent)
+        const prevNum = Number(prevTileEl.textContent)
 
-        // 2. JOKER CHECK: If either tile is the smiley, it's always valid
-        let isMoveValid = false
-
-        if (currentVal === "☺" || prevVal === "☺") {
-          console.log("☺ Joker used!")
-          isMoveValid = true
-          checkWinner()
-        } else {
-          // 3. MATH CHECK: Only if there is NO joker
-          const cNum = Number(currentVal)
-          const pNum = Number(prevVal)
-
-          const getCurrentColor = () => {
-            if (currentTileEl.classList.contains("orange-tile")) return "orange"
-            if (currentTileEl.classList.contains("green-tile")) return "green"
-            if (currentTileEl.classList.contains("blue-tile")) return "blue"
-            if (currentTileEl.classList.contains("red-tile")) return "red"
-          }
-          const getPrevColor = () => {
-            if (prevTileEl.classList.contains("orange-tile")) return "orange"
-            if (prevTileEl.classList.contains("green-tile")) return "green"
-            if (prevTileEl.classList.contains("blue-tile")) return "blue"
-            if (prevTileEl.classList.contains("red-tile")) return "red"
-          }
-
-          const isConsecutive = cNum === pNum + 1
-          const isSameColor = getCurrentColor() === getPrevColor()
-          const isSameNumber = cNum === pNum
-          const isDiffColor = getCurrentColor() !== getPrevColor()
-
-          isMoveValid =
-            (isSameColor && isConsecutive) || (isSameNumber && isDiffColor)
+        // Helper to find the color class (e.g., "orange-tile")
+        const getColor = (el) => {
+          if (el.classList.contains("orange-tile")) return "orange"
+          if (el.classList.contains("green-tile")) return "green"
+          if (el.classList.contains("blue-tile")) return "blue"
+          if (el.classList.contains("red-tile")) return "red"
+          return "joker"
         }
 
-        // 4. REJECTION: If invalid, send back to correct owner
+        const currentColor = getColor(currentTileEl)
+        const prevColor = getColor(prevTileEl)
+
+        // Rummy Rules
+        const isConsecutive = currentNum === prevNum + 1
+        const isSameColor = currentColor === prevColor
+        const isSameNumber = currentNum === prevNum
+        const isDiffColor = currentColor !== prevColor
+        const isJoker =
+          currentTileEl.textContent === "☺" || prevTileEl.textContent === "☺"
+
+        // A move is valid if it's a sequence (Same color + Consecutive)
+        // OR a group (Same number + Different colors) OR a Joker is used
+        let isMoveValid =
+          (isSameColor && isConsecutive) ||
+          (isSameNumber && isDiffColor) ||
+          isJoker
+
         if (!isMoveValid) {
-          alert("Invalid Move!")
+          alert(
+            "Invalid Move! Tiles in a set must be consecutive same-color OR same-number different-color"
+          )
+
+          // Send back to the correct player rack
           let ownerRack = originalOwner === 0 ? player1 : player2
-          for (let slot of ownerRack) {
-            if (slot.children.length === 0) {
+
+          let placedBack = false
+          ownerRack.forEach((slot) => {
+            if (!placedBack && slot.children.length === 0) {
               slot.appendChild(window.draggedElement)
-              break
+              placedBack = true
             }
-          }
+          })
         } else {
-          checkWinner()
+          console.log("Valid addition to set")
+          // If set has 3+ tiles, mark as complete turn possible
+          if (tilesInThisSet.length >= 3) {
+            hasMadeValidSet = true
+            setSlot.style.border = "2px solid green"
+          }
         }
       }
 
@@ -319,6 +373,20 @@ console.log(newArray[1].color) */
 //for loop that takes one of the players tails compare it with all the tails in the stock and remove it if they have same color and number
 //removing the tails after they are distributed on the players
 const startGame = () => {
+  player1_turn()
+  player2_turn()
+
+  player1.forEach((rack) => {
+    //if (rack.children.length > 0) rack.children[0].style.display = "block"
+  })
+
+  player2.forEach((rack) => {
+    if (rack.children.length > 0) rack.children[0].style.display = "none"
+  })
+
+  turnHead.textContent = "Player 1 turn"
+  currentPlayer = 0
+
   newArray.forEach((player1_tile, i) => {
     let currentTiles = newArray[i]
     tiles.forEach((stock_tail, index) => {
@@ -348,14 +416,49 @@ const startGame = () => {
       }
     })
   })
-  //console.log(tiles)
+  console.log(tiles)
+  display_stockpile()
 }
 
-//startGame()
+
+
+const display_stockpile = () => {
+  const tileGroup = document.querySelector(".tile-group");
+
+  if (!tileGroup) {
+    console.error("Could not find the .tile-group element!");
+    return;
+  }
+
+  // 2. Clear the screen
+  tileGroup.innerHTML = "";
+
+  // 3. Loop through your array of objects
+  tiles.forEach((tileObject) => {
+    // Create the physical <div> for the screen
+    const div = document.createElement("div");
+
+    // 4. Use your 2 attributes: color and number
+    div.classList.add("tile", `${tileObject.color}-tile`);
+
+    // Check if it's a joker or a number
+    div.textContent = tileObject.number === "joker" ? "☺" : tileObject.number;
+
+    div.draggable = true;
+
+    // 5. Add it to the visual box
+    tileGroup.appendChild(div);
+  });
+};
+
+
+
+
+
 
 const checkWinner = () => {
   // We check the player racks to see if they are empty
-  const p1TilesLeft = Array.from(player1).some(
+  const player1Left = Array.from(player1).some(
     (slot) => slot.children.length > 0
   )
   const p2TilesLeft = Array.from(player2).some(
@@ -365,13 +468,30 @@ const checkWinner = () => {
   const screen = document.querySelector("#winner-screen")
   const winText = document.querySelector("#winner-text")
 
-  if (!p1TilesLeft) {
+  if (!player1Left) {
     winText.textContent = "PLAYER 1 WINS!"
     screen.style.display = "flex"
-    document.querySelector(".game").style.opacity = "0.3" // Decrease opacity of game
+    document.querySelector(".game").style.opacity = "0.3" // Decrease opacity of background
   } else if (!p2TilesLeft) {
     winText.textContent = "PLAYER 2 WINS!"
     screen.style.display = "flex"
     document.querySelector(".game").style.opacity = "0.3"
   }
 }
+
+
+const restart = document.querySelector('#restarter')
+restart.addEventListener('mouseenter', ()=>{
+
+restart.innerHTML.style.color
+
+
+})
+
+
+const next_button = document.getElementById("show")
+next_button.addEventListener("click", () => {
+  turns()
+})
+
+startGame()

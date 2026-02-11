@@ -12,7 +12,6 @@ h1 {
   margin: 20px 0;
 }
 
-
 .playground {
   display: grid;
   grid-template-columns: 250px 1fr; /* Sidebar is 250px, Action Zone takes the rest */
@@ -73,7 +72,7 @@ h1 {
 }
 
 .action-zone {
-display: flex;
+  display: flex;
   flex-direction: column; /* Stacks P1, Board, P2, and Button vertically */
   height: 100%;
   gap: 10px;
@@ -82,13 +81,13 @@ display: flex;
 
 .main-board {
   display: flex;
- flex-grow: 1; /* Makes the board take up all space between the racks */
+  flex-grow: 1; /* Makes the board take up all space between the racks */
   flex-direction: column;
   background-color: #f5dfd8;
   border: 4px solid #5d6b2c;
   border-radius: 15px;
   padding: 85px;
- /* put the thing you gapped */
+  /* put the thing you gapped */
   cursor: grabbing;
   gap: 80fr;
 }
@@ -103,16 +102,23 @@ display: flex;
 
 /* parent of the sets*/
 .container {
+  width: 900px;
   display: flex;
   flex-wrap: wrap;
   gap: 30px;
   justify-content: center;
+  justify-self: center;
 }
 
 .sets {
- width: 130px;
+  width: 130px;
   height: 160px;
-  background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent area for cards */
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.2
+  ); /* Semi-transparent area for cards */
   border: 2px dashed #a59d9d;
   border-radius: 10px;
   display: flex;
@@ -127,16 +133,16 @@ display: flex;
 }
 
 .player-rack {
- height: auto; /* Allow it to shrink to fit tiles */
+  height: auto; /* Allow it to shrink to fit tiles */
   min-height: 80px;
   padding: 10px;
   display: flex;
   flex-wrap: wrap;
   background-color: #f8fbda;
-  border: 2px solid #000;
+  border: 2px solid #a33434;
+  border-radius: 10%;
   gap: 20px;
 }
-
 
 .buttons {
   display: inline;
@@ -214,10 +220,11 @@ display: flex;
 
 .buttons {
   display: flex;
-  width: 500px;
+  width: 150px;
   justify-content: center;
+  align-items: center;
   margin: 50px;
-  font-size: 70px;
+  font-size: 40px;
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
   border-radius: 30px;
   background-color: #d2e99f;
@@ -227,7 +234,7 @@ display: flex;
 }
 
 #turn-head {
- display: block;
+  display: block;
   margin: 5px auto;
   width: fit-content;
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
@@ -239,8 +246,8 @@ display: flex;
   margin-left: 40px;
 }
 
-#show-p2{
-font-size: xx-large;
+#show {
+  font-size: xx-large;
   margin: 5px auto;
   display: block;
   width: fit-content;
@@ -259,9 +266,21 @@ font-size: xx-large;
   background-color: rgba(255, 255, 255, 0.2);
 }
 
-#game-table .main-board {
+.main-board {
   display: flex;
-  justify-content: flex-end;
-  width: 50px;
-  height: 80px;
+  justify-content: center;
+  align-items: center;
+  height: fit-content;
+}
+
+#restarter:hover {
+  color: red;
+}
+
+aside {
+  width: auto;
+  height: 1800px;
+  border: 2px solid #a33434;
+  justify-content: center;
+  align-items: center;
 }
