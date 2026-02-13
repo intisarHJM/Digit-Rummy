@@ -405,7 +405,7 @@ const startGame = () => {
   })
 
   player2.forEach((rack) => {
-    if (rack.children.length > 0) rack.style.display = "none"
+    //if (rack.children.length > 0) rack.style.display = "none"
   })
 
   turnHead.textContent = "Player 1 turn"
