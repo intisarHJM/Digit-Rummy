@@ -117,6 +117,7 @@ is a digital adaptation of a strategic pattern-matching board game for
 ##### Mozilla Developer Network : [MDN](https://developer.mozilla.org/en-US/)
 * [MDN drag and drop](https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API)
 * [Cursor properties](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/cursor)
+* [.find() method for arrays](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/find)
 ##### Drag and Drop implementation: [Drag and Drop Tutorial](https://youtu.be/lSCLnWoa6Tw?si=v9GJNjW07HMbyoWl)
 
 

@@ -503,43 +503,54 @@ next_button.addEventListener("click", () => {
 const draw = document.querySelector("#draw-button")
 draw.addEventListener("click", () => {
   if (tiles.length === 0) {
-    console.log("stock is empty")
-    return
+    alert("The stock is empty! You must play a move if possible.");
+    return;
   }
 
-  let currentRack
+  // 1. Identify which rack container to append to
+  // We use p1Rack and p2Rack which represent the actual container <div>
+  const target_rack = (currentPlayer === 0) ? p1Rack : p2Rack;
 
-  if (currentPlayer === 0) {
-    currentRack = player1
-  } else {
-    currentRack = player2
-  }
+  // 2. Pick a random tile from the stockpile
+  const randomIndex = Math.floor(Math.random() * tiles.length);
+  const drawnTile = tiles.splice(randomIndex, 1)[0];
 
-  const emptySlot = currentRack.find((slot) => slot.children.length === 0) //Find the first empty slot in that rack
+  // 3. Create the physical tile
+  const div = document.createElement("div");
 
-  if (emptySlot) {
-    const randomIndex = Math.floor(Math.random() * tiles.length)
+  // Apply correct color/joker class
+  const colorClass = (drawnTile.color === "Joker" || drawnTile.type === "joker")
+    ? "smiley-tile"
+    : `${drawnTile.color}-tile`;
 
-    const drawnTile = tiles.splice(randomIndex, 1)[0]
+  div.classList.add("tile", colorClass);
+  div.textContent = (drawnTile.color === "Joker" || drawnTile.number === null) ? "☺" : drawnTile.number;
 
-    const div = document.createElement("div")
-    div.classList.add("tile", `${drawnTile.color}-tile`)
-    div.textContent = drawnTile.number === "joker" ? "☺" : drawnTile.number
-    div.draggable = true
+  div.draggable = true;
 
-    div.addEventListener("dragstart", (event) => {
-      window.draggedElement = event.target
-    })
+  // 4. Add drag functionality to the new tile
+  // Only the current player can move their own tiles
+  div.addEventListener("dragstart", (e) => {
 
-    emptySlot.appendChild(div)
-    display_stockpile()
+    window.draggedElement = div;
+    originalOwner = currentPlayer;
+    div.classList.add("dragging");
+  });
 
-    console.log(
-      `Drew a ${drawnTile.color} ${drawnTile.number}. Tiles left: ${tiles.length}`
-    )
-  } else {
-    alert("Your rack is full!")
-  }
-})
+  div.addEventListener("dragend", () => {
+    div.classList.remove("dragging");
+  });
+
+  // 5. Add the tile to the rack container (Unlimited capacity)
+  target_rack.appendChild(div);
+
+  // 6. Refresh the visual stockpile
+  display_stockpile();
+
+  // 7. Crucial: Mark as 'valid' so they can now click 'Finish Turn'
+  hasMadeValidSet = true;
+
+  console.log(`Player ${currentPlayer + 1} drew a tile. Hand size increased.`);
+});
 
 startGame()
