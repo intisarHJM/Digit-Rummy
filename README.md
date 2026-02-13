@@ -40,7 +40,8 @@ is a digital adaptation of a strategic pattern-matching board game for
 
 #### ***Screenshots***
 
-![Game layout Overview](./images/Rummy%20game.jpg)
+![Game Layout Wireframe](./images/Rummy%20game.jpg)
+![Live Game Interface](./images/liveGameInterface.png)
 
 
 
@@ -49,8 +50,8 @@ is a digital adaptation of a strategic pattern-matching board game for
 
 #### ***Future updates***
 - [ ] More Players can be added.
-- [ ] A button to randomize the tiles manually.
 - [ ] More tiles can be added like 1-13* 2copy * 4colors
+- [ ] the game will include the initial meld rule.
 
 
 ***
@@ -112,5 +113,11 @@ is a digital adaptation of a strategic pattern-matching board game for
 
 #### ***Credits***
 ##### The Rummy Game Protocol: [Piatnik](https://piatnik.com/uploads/media/default/0001/07/9dc926e1347f08ce260f02863713ec50ed8ea996.pdf)
+
+##### Mozilla Developer Network : [MDN](https://developer.mozilla.org/en-US/)
+* [MDN drag and drop](https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API)
+* [Cursor properties](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/cursor)
+##### Drag and Drop implementation: [Drag and Drop Tutorial](https://youtu.be/lSCLnWoa6Tw?si=v9GJNjW07HMbyoWl)
+
 
 
